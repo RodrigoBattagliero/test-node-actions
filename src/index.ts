@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { productsRouter } from './products.js';
+import { ProductRouter } from './Router/ProductRouter.js';
 import { categoriesRouter } from './categories.js';
 const app = express();
 const PORT = 3001;
@@ -14,7 +14,7 @@ app.get('/api/status', (req: Request, res: Response) => {
     });
 });
 
-app.use('/api/products', productsRouter);
+app.use('/api/products', ProductRouter);
 app.use('/api/categories', categoriesRouter);
 
 app.use((req: Request, res: Response) => {

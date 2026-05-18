@@ -19,10 +19,14 @@ model Category {
 }
 
 model Product {
-  id         Int       @id @default(autoincrement())
-  name       String
-  price      Float
-  stock      Int
-  categoryId Int?
-  category   Category? @relation(fields: [categoryId], references: [id])
+  id          Int       @id @default(autoincrement())
+  name        String
+  price       Float
+  stock       Int
+  description String?
+  imgUrl      String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])
 }
