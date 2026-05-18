@@ -1,19 +1,16 @@
 import { Router, Request, Response } from "express";
-import { prisma } from "../../prisma/adapter.js";
 import { CategoryDTOSchema } from "../DTO/CategoryDTO.js";
+import { categoryService } from "../Service/CategoryService.js";
 
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
-    res.json(await prisma.category.findMany({ include: { products: true } }));
+    res.json(await categoryService.getCategories());
 });
 
 router.get('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id as string, 10);
-    const category = await prisma.category.findUnique({
-        where: { id },
-        include: { products: true }
-    });
+    const category = await categoryService.getCategoryById(id);
 
     if (!category) {
         return res.status(404).json({ error: 'Categoría no encontrada' });
@@ -28,7 +25,7 @@ router.post('/', async (req: Request, res: Response) => {
         return res.status(400).json({ error: result.error.flatten() });
     }
 
-    const created = await prisma.category.create({ data: result.data });
+    const created = await categoryService.createCategory(result.data);
     res.status(201).json(created);
 });
 
@@ -39,17 +36,13 @@ router.put('/:id', async (req: Request, res: Response) => {
         return res.status(400).json({ error: result.error.flatten() });
     }
 
-    const updated = await prisma.category.update({
-        where: { id },
-        data: result.data
-    });
-
+    const updated = await categoryService.updateCategory(id, result.data);
     res.json(updated);
 });
 
 router.delete('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id as string, 10);
-    const deleted = await prisma.category.delete({ where: { id } });
+    const deleted = await categoryService.deleteCategory(id);
     res.json({ message: 'Categoría eliminada con éxito', deleted });
 });
 
