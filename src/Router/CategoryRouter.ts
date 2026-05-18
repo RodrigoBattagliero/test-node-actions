@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
-import { prisma } from "../prisma/adapter.js";
+import { prisma } from "../../prisma/adapter.js";
+import { CategoryDTOSchema } from "../DTO/CategoryDTO.js";
 
 const router = Router();
 
@@ -22,22 +23,25 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 router.post('/', async (req: Request, res: Response) => {
-    const { name } = req.body;
-
-    if (!name) {
-        return res.status(400).json({ error: 'Campos requeridos: name' });
+    const result = CategoryDTOSchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ error: result.error.flatten() });
     }
 
-    const newCategory = await prisma.category.create({ data: { name } });
-    res.status(201).json(newCategory);
+    const created = await prisma.category.create({ data: result.data });
+    res.status(201).json(created);
 });
 
 router.put('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id as string, 10);
-    const { name } = req.body;
+    const result = CategoryDTOSchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ error: result.error.flatten() });
+    }
+
     const updated = await prisma.category.update({
         where: { id },
-        data: { name }
+        data: result.data
     });
 
     res.json(updated);
@@ -49,4 +53,4 @@ router.delete('/:id', async (req: Request, res: Response) => {
     res.json({ message: 'Categoría eliminada con éxito', deleted });
 });
 
-export { router as categoriesRouter };
+export { router as CategoryRouter };

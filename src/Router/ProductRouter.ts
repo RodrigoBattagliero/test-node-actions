@@ -1,7 +1,6 @@
 import { Router, Request, Response } from "express";
 import { prisma } from "../../prisma/adapter.js";
-import { ProductDTO } from "../DTO/ProductDTO.js";
-
+import { ProductDTOSchema } from "../DTO/ProductDTO.js";
 
 const router = Router();
 
@@ -24,24 +23,13 @@ router.get('/:id', async (req: Request, res: Response) => {
 });
 
 router.post('', async (req: Request, res: Response) => {
-    // Express ya parseó el body a JSON gracias al middleware express.json()
-    const { name, price, stock, description, imgUrl, categoryId } = req.body;
-
-    if (!name || price === undefined || stock === undefined) {
-        return res.status(400).json({ error: 'Campos requeridos: name, price, stock' });
+    const result = ProductDTOSchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ error: result.error.flatten() });
     }
 
-    const newProduct: ProductDTO = {
-        name,
-        price,
-        stock,
-        ...(description !== undefined && { description }),
-        ...(imgUrl !== undefined && { imgUrl }),
-        ...(categoryId !== undefined && { categoryId })
-    };
-
     const newProductModel = await prisma.product.create({
-        data: newProduct,
+        data: result.data,
         include: { category: true }
     });
 
@@ -50,10 +38,15 @@ router.post('', async (req: Request, res: Response) => {
 
 router.put('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id as string, 10);
-    const data: ProductDTO = req.body;
+    const result = ProductDTOSchema.safeParse(req.body);
+    if (!result.success) {
+        return res.status(400).json({ error: result.error.flatten() });
+    }
+
     const updated = await prisma.product.update({
         where: { id },
-        data
+        data: result.data,
+        include: { category: true }
     });
     res.json(updated);
 });
@@ -61,11 +54,9 @@ router.put('/:id', async (req: Request, res: Response) => {
 router.delete('/:id', async (req: Request, res: Response) => {
     const id = parseInt(req.params.id as string, 10);
     const deleted = await prisma.product.delete({
-        where: {
-            id
-        }
-    })
+        where: { id }
+    });
     res.json({ message: 'Producto eliminado con éxito', deleted });
 });
 
-export { router as ProductRouter }
+export { router as ProductRouter };
