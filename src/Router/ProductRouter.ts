@@ -1,6 +1,6 @@
-import { Router, Request, Response } from "express";
-import { ProductDTOSchema } from "../DTO/ProductDTO.js";
-import { productService } from "../Service/ProductService.js";
+import { Router, Request, Response } from 'express';
+import { ProductDTOSchema } from '../DTO/ProductDTO.js';
+import { productService } from '../Service/ProductService.js';
 
 const router = Router();
 
