@@ -1,0 +1,17 @@
+name: events!. asd
+
+on:
+    issues:
+        types: [opened, reopened]
+    issue_comment:
+        types: [created]
+
+jobs:
+    inspect-things:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Inspección
+              run: |
+                  echo "Event ${{github.event_name}}"
+                  echo "Issue ${{github.event.issue.number}}"
+                  echo "Comment ${{github.event.comment.body}}"
