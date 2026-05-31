@@ -22,7 +22,8 @@ on:
 
             reason:
                 description: 'Motivo'
-                required: true
+                required: false
+                default: 'Porque si'
                 type: string
 
 jobs:
