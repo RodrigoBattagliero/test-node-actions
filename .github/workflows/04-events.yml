@@ -14,3 +14,13 @@ jobs:
                   echo "Issue: ${{github.event.issue.number}}"
                   echo "Issue comment: ${{github.event.issue.body}}"
                   echo "Issue title: ${{github.event.issue.title}}"
+    comment:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Comentario automatico
+              env:
+                  GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+                  ISSUE_NUMBER: ${{github.event.issue.id}}
+                  REPO: ${{github.repository}}
+              run: |
+                  gh issue comment "$ISSUE_NUMBER" --body "Gracias por tu aporte a este repo: ${REPO}"
