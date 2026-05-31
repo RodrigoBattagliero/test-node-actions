@@ -23,4 +23,4 @@ jobs:
                   ISSUE_NUMBER: ${{github.event.issue.id}}
                   REPO: ${{github.repository}}
               run: |
-                  gh issue comment "$ISSUE_NUMBER" --body "Gracias por tu aporte a este repo: ${REPO}"
+                  gh issue comment "$ISSUE_NUMBER" --body "Gracias por tu aporte." --repo "$REPO"
