@@ -22,7 +22,7 @@ on:
 
             reason:
                 description: 'Motivo'
-                required: false
+                required: true
                 type: string
 
 jobs:
