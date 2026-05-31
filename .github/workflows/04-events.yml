@@ -20,7 +20,7 @@ jobs:
             - name: Comentario automatico
               env:
                   GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-                  ISSUE_NUMBER: ${{github.event.issue.id}}
+                  ISSUE_NUMBER: ${{github.event.issue.number}}
                   REPO: ${{github.repository}}
               run: |
                   gh issue comment "$ISSUE_NUMBER" --body "Gracias por tu aporte." --repo "$REPO"
