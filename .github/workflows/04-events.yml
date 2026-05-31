@@ -3,8 +3,6 @@ name: events!. asd
 on:
     issues:
         types: [opened, reopened]
-    issue_comment:
-        types: [created]
 
 jobs:
     inspect-things:
@@ -12,6 +10,7 @@ jobs:
         steps:
             - name: Inspección
               run: |
-                  echo "Event ${{github.event_name}}"
-                  echo "Issue ${{github.event.issue.number}}"
-                  echo "Comment ${{github.event.comment.body}}"
+                  echo "Event: ${{github.event_name}}"
+                  echo "Issue: ${{github.event.issue.number}}"
+                  echo "Issue comment: ${{github.event.issue.body}}"
+                  echo "Issue title: ${{github.event.issue.title}}"

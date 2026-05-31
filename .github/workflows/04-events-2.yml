@@ -1,0 +1,14 @@
+name: events!. asd
+
+on:
+    issue_comment:
+        types: [created]
+
+jobs:
+    inspect-things:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Inspección
+              run: |
+                  echo "Comment body${{github.event.comment.body}}"
+                  echo "Comment id ${{github.event.comment.id}}"
