@@ -2,21 +2,53 @@ name: manual
 
 on:
     workflow_dispatch:
+        inputs:
+            log_level:
+                description: 'Nivel de log'
+                required: true
+                default: 'info'
+                type: choice
+                options: ['info', 'warning', 'error']
+
+            environment:
+                description: 'Entorno'
+                type: environment
+
+            dry_run:
+                description: 'Ejecutar sin aplicar cambios'
+                required: false
+                default: false
+                type: boolean
+
+            reason:
+                description: 'Motivo'
+                required: false
+                default: 'Porque si'
+                type: string
 
 jobs:
     hello:
         runs-on: ubuntu-latest
         steps:
-            - name: Saludar
-              run: echo "Hola desde gh"
+            - name: Mostrar variables
+              env:
+                  LOG_LEVEL: ${{inputs.log_level}}
+                  ENVIRONMENT: ${{inputs.environment}}
+                  DRY_RUN: ${{inputs.dry_run}}
+                  REASON: ${{inputs.reason}}
+              run: |
+                  echo "LOG LEVEL: $LOG_LEVEL"
+                  echo "ENVIRONMENT: $ENVIRONMENT"
+                  echo "DRY_RUNL: $DRY_RUN"
+                  echo "REASON: $REASON"
 
-            - name: ver fecha
-              run: date
+            - name: Deploy (Solo !dry-run)
+              if: ${{!inputs.dry_run}}
+              env:
+                  ENVIRONMENT: ${{inputs.environment}}
+              run: echo "Deploying to ${{inputs.environment}}"
 
-            - name: Ver files
-              run: ls -al
-    repo-files:
-        runs-on: ubuntu-lastest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v6
+            - name: Deploy (Solo SI dry-run)
+              if: ${{inputs.dry_run}}
+              run: |
+                  echo "DRY run: no changes applied"
