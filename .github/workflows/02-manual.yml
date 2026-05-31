@@ -1,0 +1,22 @@
+name: manual
+
+on:
+    workflow_dispatch:
+
+jobs:
+    hello:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Saludar
+              run: echo "Hola desde gh"
+
+            - name: ver fecha
+              run: date
+
+            - name: Ver files
+              run: ls -al
+    repo-files:
+        runs-on: ubuntu-lastest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v6
