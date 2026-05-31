@@ -7,6 +7,8 @@ on:
 jobs:
     inspect-things:
         runs-on: ubuntu-22.04
+        permissions:
+            issues: write
         steps:
             - name: Inspección
               run: |
@@ -14,9 +16,7 @@ jobs:
                   echo "Issue: ${{github.event.issue.number}}"
                   echo "Issue comment: ${{github.event.issue.body}}"
                   echo "Issue title: ${{github.event.issue.title}}"
-    comment:
-        runs-on: ubuntu-22.04
-        steps:
+
             - name: Comentario automatico
               env:
                   GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
